@@ -42,7 +42,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             runCatching {
                 withContext(Dispatchers.IO) {
-                    marketRepositoryImpl.getAssetInfo()
+                    marketRepositoryImpl.getMarketAssets()
                 }
             }.onSuccess {
                 _marketAssets = it

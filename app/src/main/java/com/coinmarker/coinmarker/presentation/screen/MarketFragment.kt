@@ -34,9 +34,32 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
     private fun addObserver() {
         viewModel.getAssetInfoState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                UiState.SUCCESS -> adapter.submitList(viewModel.assets)
+                UiState.LOADING -> handleLoadingAssets()
+                UiState.SUCCESS -> handleSuccessAssets()
+                UiState.EMPTY -> handleEmptyAssets()
                 else -> {}
             }
+        }
+    }
+    private fun handleLoadingAssets(){
+        with(binding){
+            pbSearchLoading.visibility = View.VISIBLE
+        }
+    }
+
+    private fun handleSuccessAssets(){
+        adapter.submitList(viewModel.marketAssets)
+        with(binding){
+            pbSearchLoading.visibility = View.GONE
+            rvMarketSearchResult.visibility = View.VISIBLE
+        }
+    }
+
+    private fun handleEmptyAssets() {
+        adapter.submitList(viewModel.marketAssets)
+        with(binding) {
+            pbSearchLoading.visibility = View.GONE
+            rvMarketSearchResult.visibility = View.GONE
         }
     }
 
