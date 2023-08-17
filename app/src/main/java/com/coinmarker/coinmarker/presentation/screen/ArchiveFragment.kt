@@ -11,32 +11,78 @@ import com.coinmarker.coinmarker.presentation.MainViewModel
 import com.coinmarker.coinmarker.presentation.adapter.ArchiveAdapter
 import com.coinmarker.coinmarker.presentation.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 
 class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragment_archive) {
-    private val viewModel :MainViewModel by activityViewModels()
-    private val adapter by lazy{ ArchiveAdapter(requireContext(),::isArchivedAsset,::updateArchiveState) }
+    private val viewModel: MainViewModel by activityViewModels()
+    private val adapter by lazy {
+        ArchiveAdapter(
+            requireContext(),
+            ::isArchivedAsset,
+            ::updateArchiveState
+        )
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
-        initAdapter()
         addObserver()
+        initAdapter()
+        initView()
+
     }
-    private fun initView(){
+
+    private fun initView() {
         viewModel.getArchivedAsset()
     }
 
-    private fun addObserver(){
-        viewModel.getArchivedAssetState.observe(viewLifecycleOwner){ state->
-            when(state){
-                UiState.SUCCESS ->{adapter.submitList(viewModel.archivedAssets)}
-                else ->{}
+    private fun addObserver() {
+        viewModel.getArchivedAssetState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                UiState.LOADING->{
+                    handleLoadingArchive()
+                }
+                UiState.SUCCESS -> {
+                    handleSuccessArchive()
+                }
+
+                UiState.EMPTY -> {
+                    handleEmptyArchive()
+                }
+
+                else -> {}
             }
         }
     }
-    private fun initAdapter(){
-        binding.rvArchivedAsset.adapter = adapter.apply {  }
+
+    private fun handleLoadingArchive(){
+        with(binding){
+            pbArchiveLoading.visibility = View.VISIBLE
+            tvEmptyWarning.visibility = View.GONE
+        }
+    }
+
+    private fun handleSuccessArchive(){
+        adapter.submitList(viewModel.archivedAssets)
+        with(binding){
+            tvEmptyWarning.visibility = View.GONE
+            pbArchiveLoading.visibility = View.GONE
+            rvArchivedAsset.visibility = View.VISIBLE
+        }
+    }
+
+    private fun handleEmptyArchive() {
+        adapter.submitList(viewModel.archivedAssets)
+        with(binding) {
+            tvEmptyWarning.visibility = View.VISIBLE
+            rvArchivedAsset.visibility = View.GONE
+            pbArchiveLoading.visibility = View.GONE
+        }
+    }
+
+    private fun initAdapter() {
+        binding.rvArchivedAsset.adapter = adapter.apply { viewModel.archivedAssets }
     }
 
     private fun isArchivedAsset(asset: AssetDto) = viewModel.isArchivedAsset(asset)

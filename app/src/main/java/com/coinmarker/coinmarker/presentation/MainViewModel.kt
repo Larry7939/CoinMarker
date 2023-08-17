@@ -62,7 +62,12 @@ class MainViewModel @Inject constructor(
                     _archivedAssets = localStorage.assets.toMutableList()
                 }
             }.onSuccess {
-                _getArchivedAssetState.value = UiState.SUCCESS
+                if(_archivedAssets.isEmpty()){
+                    _getArchivedAssetState.value = UiState.EMPTY
+                }
+                else{
+                    _getArchivedAssetState.value = UiState.SUCCESS
+                }
             }.onFailure { throwable ->
                 throwable.message?.let { KorbitLog.e(it) }
                 _getArchivedAssetState.value = UiState.ERROR
@@ -83,7 +88,12 @@ class MainViewModel @Inject constructor(
                 }
             }.onSuccess {
                 _archivedAssets = localStorage.assets.toMutableList()
-                _getArchivedAssetState.value = UiState.SUCCESS
+                if(_archivedAssets.isEmpty()){
+                    _getArchivedAssetState.value = UiState.EMPTY
+                }
+                else{
+                    _getArchivedAssetState.value = UiState.SUCCESS
+                }
             }.onFailure { throwable ->
                 throwable.message?.let { KorbitLog.e(it) }
                 _getArchivedAssetState.value = UiState.ERROR
