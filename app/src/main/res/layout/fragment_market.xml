@@ -7,6 +7,7 @@
         <variable
             name="vm"
             type="com.coinmarker.coinmarker.presentation.MainViewModel" />
+        <import type="android.view.View"/>
 
     </data>
 
@@ -31,9 +32,21 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:visibility="@{vm.getAssetInfoState == vm.getAssetInfoState.LOADING ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="@id/gl_start"
             app:layout_constraintEnd_toEndOf="@id/gl_end"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_asset_search_result"/>
+        <ProgressBar
+            android:id="@+id/pb_search_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:indeterminateTint="@color/G2"
+            android:visibility="@{vm.getAssetInfoState == vm.getAssetInfoState.LOADING ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="assetData"
+            type="com.coinmarker.coinmarker.data.model.AssetDto" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="24dp"
+        android:layout_marginVertical="5dp"
+        android:background="@drawable/border_item_archive">
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/ib_asset_is_archived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/asset_mark_selector"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/W1"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_asset_name"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            tools:text = "가상자산명"
+            android:text="@{assetData.currencyPair}"
+            android:gravity="end"
+            android:layout_marginEnd="5dp"
+            android:textAppearance="@style/TextAppearance.D2"
+            android:textColor="@color/B1"
+            app:layout_constraintStart_toEndOf="@id/ib_asset_is_archived"
+            app:layout_constraintEnd_toStartOf="@id/tv_last"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_last"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:text="@{assetData.last}"
+            tools:text = "현재가"
+            android:gravity="end"
+            android:layout_marginEnd="15dp"
+            android:textAppearance="@style/TextAppearance.D3"
+            android:textColor="@color/B1"
+             app:layout_constraintEnd_toStartOf="@id/tv_change_rate"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_change_rate"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            tools:text = "변동률"
+            android:gravity="end"
+            android:text='@{assetData.changePercent + "%"}'
+            android:textAppearance="@style/TextAppearance.D3"
+            android:textColor="@color/B1"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintEnd_toStartOf="@id/tv_volume"
+            app:layout_constraintTop_toTopOf="@id/tv_volume"
+            app:layout_constraintBottom_toBottomOf="@id/tv_volume"
+            android:layout_marginBottom="20dp"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_change_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text = "변동가격"
+            android:gravity="end"
+            android:text="@{assetData.last}"
+            android:textAppearance="@style/TextAppearance.D3"
+            android:textColor="@color/B1"
+            app:layout_constraintTop_toBottomOf="@id/tv_change_rate"
+            app:layout_constraintEnd_toEndOf="@id/tv_change_rate" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volume"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            tools:text = "거래대금"
+            android:gravity="end"
+            android:text="@{assetData.volume}"
+            android:layout_marginStart="120dp"
+            android:textAppearance="@style/TextAppearance.D3"
+            android:textColor="@color/B1"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_last"
+            app:layout_constraintBottom_toBottomOf="@id/tv_last" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
