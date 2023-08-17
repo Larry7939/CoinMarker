@@ -37,6 +37,8 @@ class MainViewModel @Inject constructor(
     val archivedAssets: List<AssetDto>
         get() = _archivedAssets
 
+    val searchWord = MutableLiveData<String>()
+
     fun getMarketAssets() {
         _getMarketAssetsState.value = UiState.LOADING
         viewModelScope.launch(Dispatchers.Main) {

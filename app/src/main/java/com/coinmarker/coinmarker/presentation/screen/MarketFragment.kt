@@ -40,6 +40,26 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
                 else -> {}
             }
         }
+        viewModel.searchWord.observe(viewLifecycleOwner) { word ->
+            if (word.isNotEmpty()) {
+                setFilteredAssets(word)
+            } else {
+                binding.tvNoSearchResultWarning.visibility = View.GONE
+                adapter.submitList(viewModel.marketAssets)
+            }
+        }
+    }
+
+    private fun setFilteredAssets(word: String) {
+        val filteredAssets = viewModel.marketAssets.filter {
+            it.currencyPair.contains(word)
+        }
+        if (filteredAssets.isEmpty()) {
+            binding.tvNoSearchResultWarning.visibility = View.VISIBLE
+        } else {
+            binding.tvNoSearchResultWarning.visibility = View.GONE
+        }
+        adapter.submitList(filteredAssets)
     }
 
     private fun handleLoadingAssets() {
