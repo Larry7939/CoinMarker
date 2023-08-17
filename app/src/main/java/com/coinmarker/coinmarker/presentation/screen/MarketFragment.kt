@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import com.artventure.artventure.binding.BindingFragment
 import com.coinmarker.coinmarker.R
+import com.coinmarker.coinmarker.data.model.AssetDto
 import com.coinmarker.coinmarker.databinding.FragmentMarketBinding
 import com.coinmarker.coinmarker.presentation.MainViewModel
 import com.coinmarker.coinmarker.presentation.adapter.MarketAdapter
@@ -16,7 +17,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
     private val viewModel: MainViewModel by activityViewModels()
 
     private val adapter by lazy {
-        MarketAdapter(requireContext())
+        MarketAdapter(requireContext(), ::isArchivedAsset, ::updateArchiveState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,5 +44,12 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
         with(binding) {
             rvMarketSearchResult.adapter = adapter
         }
+    }
+
+    private fun isArchivedAsset(asset: AssetDto) = viewModel.isArchivedAsset(asset)
+
+
+    private fun updateArchiveState(asset: AssetDto, isSelected: Boolean) {
+        viewModel.updateArchivedState(asset, isSelected)
     }
 }

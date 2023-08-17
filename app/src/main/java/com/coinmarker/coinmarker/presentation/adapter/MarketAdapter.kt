@@ -9,7 +9,11 @@ import com.coinmarker.coinmarker.data.model.AssetDto
 import com.coinmarker.coinmarker.databinding.ItemAssetSearchResultBinding
 import com.coinmarker.coinmarker.presentation.util.diffutil.AssetItemCallback
 
-class MarketAdapter(private val context: Context) :
+class MarketAdapter(
+    private val context: Context,
+    private val isArchivedAsset: (AssetDto) -> Boolean,
+    private val updateArchiveState: (AssetDto, Boolean) -> Unit
+) :
     ListAdapter<AssetDto, MarketAdapter.MarketViewHolder>(AssetItemCallback()) {
     private val inflater by lazy { LayoutInflater.from(context) }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarketViewHolder {
@@ -25,6 +29,11 @@ class MarketAdapter(private val context: Context) :
         fun onBind(data: AssetDto) {
             with(binding) {
                 assetData = data
+                binding.ibAssetIsArchived.isSelected = isArchivedAsset(data)
+                binding.ibAssetIsArchived.setOnClickListener {
+                    it.isSelected = !it.isSelected
+                    updateArchiveState(data, it.isSelected)
+                }
             }
         }
     }
