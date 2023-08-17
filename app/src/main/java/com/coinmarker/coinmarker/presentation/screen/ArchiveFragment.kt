@@ -54,6 +54,28 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
                 else -> {}
             }
         }
+        viewModel.searchWord.observe(viewLifecycleOwner) { word ->
+            if (word.isNotEmpty()) {
+                setFilteredAssets(word)
+            } else {
+                binding.tvNoSearchResultWarning.visibility = View.GONE
+                adapter.submitList(viewModel.archivedAssets)
+            }
+        }
+    }
+
+    private fun setFilteredAssets(word: String) {
+        val filteredAssets = viewModel.archivedAssets.filter {
+            it.currencyPair.contains(word)
+        }
+        if (filteredAssets.isEmpty()) {
+            binding.tvEmptyWarning.visibility = View.GONE
+            binding.tvNoSearchResultWarning.visibility = View.VISIBLE
+        } else {
+            binding.tvEmptyWarning.visibility = View.GONE
+            binding.tvNoSearchResultWarning.visibility = View.GONE
+        }
+        adapter.submitList(filteredAssets)
     }
 
     private fun handleLoadingArchive() {
@@ -64,7 +86,7 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
     }
 
     private fun handleSuccessArchive() {
-        adapter.submitList(viewModel.archivedAssets)
+        setFilteredAssets(viewModel.searchWord.value ?: "")
         with(binding) {
             tvEmptyWarning.visibility = View.GONE
             pbArchiveLoading.visibility = View.GONE
@@ -73,9 +95,10 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
     }
 
     private fun handleEmptyArchive() {
-        adapter.submitList(viewModel.archivedAssets)
+        setFilteredAssets(viewModel.searchWord.value ?: "")
         with(binding) {
             tvEmptyWarning.visibility = View.VISIBLE
+            tvNoSearchResultWarning.visibility = View.GONE
             rvArchivedAsset.visibility = View.GONE
             pbArchiveLoading.visibility = View.GONE
         }

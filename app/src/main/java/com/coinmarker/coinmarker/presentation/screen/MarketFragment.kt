@@ -69,7 +69,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
     }
 
     private fun handleSuccessAssets() {
-        adapter.submitList(viewModel.marketAssets)
+        setFilteredAssets(viewModel.searchWord.value?:"")
         with(binding) {
             pbSearchLoading.visibility = View.GONE
             rvMarketSearchResult.visibility = View.VISIBLE
@@ -77,7 +77,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
     }
 
     private fun handleEmptyAssets() {
-        adapter.submitList(viewModel.marketAssets)
+        setFilteredAssets(viewModel.searchWord.value?:"")
         with(binding) {
             pbSearchLoading.visibility = View.GONE
             rvMarketSearchResult.visibility = View.GONE
