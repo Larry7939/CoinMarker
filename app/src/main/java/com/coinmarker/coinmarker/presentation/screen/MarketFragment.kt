@@ -41,15 +41,16 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
             }
         }
     }
-    private fun handleLoadingAssets(){
-        with(binding){
+
+    private fun handleLoadingAssets() {
+        with(binding) {
             pbSearchLoading.visibility = View.VISIBLE
         }
     }
 
-    private fun handleSuccessAssets(){
+    private fun handleSuccessAssets() {
         adapter.submitList(viewModel.marketAssets)
-        with(binding){
+        with(binding) {
             pbSearchLoading.visibility = View.GONE
             rvMarketSearchResult.visibility = View.VISIBLE
         }

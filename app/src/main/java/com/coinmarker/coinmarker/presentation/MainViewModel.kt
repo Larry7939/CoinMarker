@@ -30,7 +30,7 @@ class MainViewModel @Inject constructor(
         get() = _getArchivedAssetState
 
     private var _marketAssets = mutableListOf<AssetDto>()
-    val marketAssets:List<AssetDto>
+    val marketAssets: List<AssetDto>
         get() = _marketAssets
 
     private var _archivedAssets = mutableListOf<AssetDto>()
@@ -54,7 +54,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getArchivedAsset(){
+    fun getArchivedAsset() {
         _getArchivedAssetState.value = UiState.LOADING
         viewModelScope.launch(Dispatchers.Main) {
             runCatching {
@@ -62,10 +62,9 @@ class MainViewModel @Inject constructor(
                     _archivedAssets = localStorage.assets.toMutableList()
                 }
             }.onSuccess {
-                if(_archivedAssets.isEmpty()){
+                if (_archivedAssets.isEmpty()) {
                     _getArchivedAssetState.value = UiState.EMPTY
-                }
-                else{
+                } else {
                     _getArchivedAssetState.value = UiState.SUCCESS
                 }
             }.onFailure { throwable ->
@@ -79,7 +78,7 @@ class MainViewModel @Inject constructor(
         _getArchivedAssetState.value = UiState.LOADING
         viewModelScope.launch(Dispatchers.Main) {
             runCatching {
-                withContext(Dispatchers.IO){
+                withContext(Dispatchers.IO) {
                     if (isSelected) {
                         localStorage.addArchivedAsset(asset)
                     } else {
@@ -88,10 +87,9 @@ class MainViewModel @Inject constructor(
                 }
             }.onSuccess {
                 _archivedAssets = localStorage.assets.toMutableList()
-                if(_archivedAssets.isEmpty()){
+                if (_archivedAssets.isEmpty()) {
                     _getArchivedAssetState.value = UiState.EMPTY
-                }
-                else{
+                } else {
                     _getArchivedAssetState.value = UiState.SUCCESS
                 }
             }.onFailure { throwable ->

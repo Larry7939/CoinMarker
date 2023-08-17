@@ -11,7 +11,6 @@ import com.coinmarker.coinmarker.presentation.MainViewModel
 import com.coinmarker.coinmarker.presentation.adapter.ArchiveAdapter
 import com.coinmarker.coinmarker.presentation.util.UiState
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 
@@ -40,9 +39,10 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
     private fun addObserver() {
         viewModel.getArchivedAssetState.observe(viewLifecycleOwner) { state ->
             when (state) {
-                UiState.LOADING->{
+                UiState.LOADING -> {
                     handleLoadingArchive()
                 }
+
                 UiState.SUCCESS -> {
                     handleSuccessArchive()
                 }
@@ -56,16 +56,16 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
         }
     }
 
-    private fun handleLoadingArchive(){
-        with(binding){
+    private fun handleLoadingArchive() {
+        with(binding) {
             pbArchiveLoading.visibility = View.VISIBLE
             tvEmptyWarning.visibility = View.GONE
         }
     }
 
-    private fun handleSuccessArchive(){
+    private fun handleSuccessArchive() {
         adapter.submitList(viewModel.archivedAssets)
-        with(binding){
+        with(binding) {
             tvEmptyWarning.visibility = View.GONE
             pbArchiveLoading.visibility = View.GONE
             rvArchivedAsset.visibility = View.VISIBLE
@@ -82,7 +82,7 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
     }
 
     private fun initAdapter() {
-        binding.rvArchivedAsset.adapter = adapter.apply { viewModel.archivedAssets }
+        binding.rvArchivedAsset.adapter = adapter
     }
 
     private fun isArchivedAsset(asset: AssetDto) = viewModel.isArchivedAsset(asset)
