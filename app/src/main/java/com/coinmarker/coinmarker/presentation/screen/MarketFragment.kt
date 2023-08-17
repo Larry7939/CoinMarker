@@ -28,7 +28,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
     }
 
     private fun initView() {
-        viewModel.getAssetInfo()
+        viewModel.getMarketAssets()
     }
 
     private fun addObserver() {

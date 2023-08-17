@@ -21,35 +21,35 @@ class MainViewModel @Inject constructor(
     private val localStorage: LocalDataSource
 ) :
     ViewModel() {
-    private var _getAssetInfoState = MutableLiveData<UiState>()
+    private var _getMarketAssetsState = MutableLiveData<UiState>()
     val getAssetInfoState: LiveData<UiState>
-        get() = _getAssetInfoState
+        get() = _getMarketAssetsState
 
     private var _getArchivedAssetState = MutableLiveData<UiState>()
     val getArchivedAssetState: LiveData<UiState>
         get() = _getArchivedAssetState
 
-    private var _assets = mutableListOf<AssetDto>()
-    val assets:List<AssetDto>
-        get() = _assets
+    private var _marketAssets = mutableListOf<AssetDto>()
+    val marketAssets:List<AssetDto>
+        get() = _marketAssets
 
     private var _archivedAssets = mutableListOf<AssetDto>()
     val archivedAssets: List<AssetDto>
         get() = _archivedAssets
 
-    fun getAssetInfo() {
-        _getAssetInfoState.value = UiState.LOADING
+    fun getMarketAssets() {
+        _getMarketAssetsState.value = UiState.LOADING
         viewModelScope.launch(Dispatchers.Main) {
             runCatching {
                 withContext(Dispatchers.IO) {
                     marketRepositoryImpl.getAssetInfo()
                 }
             }.onSuccess {
-                _assets = it
-                _getAssetInfoState.value = UiState.SUCCESS
+                _marketAssets = it
+                _getMarketAssetsState.value = UiState.SUCCESS
             }.onFailure { throwable ->
                 throwable.message?.let { KorbitLog.e(it) }
-                _getAssetInfoState.value = UiState.ERROR
+                _getMarketAssetsState.value = UiState.ERROR
             }
         }
     }

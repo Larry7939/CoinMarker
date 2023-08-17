@@ -10,14 +10,13 @@ import com.coinmarker.coinmarker.data.util.toVolumeInteger
 import com.coinmarker.coinmarker.domain.MarketRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import timber.log.Timber
 import javax.inject.Inject
 
 class MarketRepositoryImpl @Inject constructor(private val marketDataSource: MarketDataSource) :
     MarketRepository {
-    override suspend fun getAssetInfo(): MutableList<AssetDto> {
+    override suspend fun getMarketAssets(): MutableList<AssetDto> {
         val assets = mutableListOf<AssetDto>()
-        val jsonStr = marketDataSource.getAssetInfo()
+        val jsonStr = marketDataSource.getMarketAssets()
         val gson = Gson()
         val assetInfoMap: Map<String, ResponseGetAssetDetail> =
             gson.fromJson(

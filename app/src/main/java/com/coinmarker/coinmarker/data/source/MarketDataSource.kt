@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 
 class MarketDataSource @Inject constructor(private val marketService: MarketService) {
-    suspend fun getAssetInfo(): String {
-        return marketService.getAssetInfo()
+    suspend fun getMarketAssets(): String {
+        return marketService.getMarketAssets()
     }
 }
