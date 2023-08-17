@@ -15,22 +15,22 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val marketRepositoryImpl: MarketRepository) :
     ViewModel() {
-    private var _uiState = MutableLiveData<UiState>()
-    val uiState: LiveData<UiState>
-        get() = _uiState
+    private var _getAssetInfoState = MutableLiveData<UiState>()
+    val getAssetInfoState: LiveData<UiState>
+        get() = _getAssetInfoState
     var assets = mutableListOf<AssetDto>()
 
     fun getAssetInfo() {
-        _uiState.value = UiState.LOADING
+        _getAssetInfoState.value = UiState.LOADING
         viewModelScope.launch {
             runCatching {
                 marketRepositoryImpl.getAssetInfo()
             }.onSuccess {
                 assets = it
-                _uiState.value = UiState.SUCCESS
+                _getAssetInfoState.value = UiState.SUCCESS
             }.onFailure {
                 Timber.e(it.message)
-                _uiState.value = UiState.ERROR
+                _getAssetInfoState.value = UiState.ERROR
             }
         }
     }

@@ -13,15 +13,18 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main) {
-    private val viewModel:MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        viewModel.getAssetInfo()
-        changeFragment(0)
         addListener()
+        initView()
+    }
+
+    private fun initView() {
+        changeFragment(0)
     }
 
     private fun addListener() {
