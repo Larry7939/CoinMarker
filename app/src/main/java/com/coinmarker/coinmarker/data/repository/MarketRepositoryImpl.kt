@@ -28,7 +28,7 @@ class MarketRepositoryImpl @Inject constructor(private val marketDataSource: Mar
             with(entry) {
                 assets.add(
                     AssetDto(
-                        currencyPair = key,
+                        currencyPair = key.replace('_', '/').uppercase(Locale.ROOT),
                         last = value.last.addCommasToNumber().setPriceFormat(),
                         changePercent = value.changePercent.addCommasToNumber().setPercentFormat(),
                         changePrice = value.change.addCommasToNumber().setPriceFormat(),
