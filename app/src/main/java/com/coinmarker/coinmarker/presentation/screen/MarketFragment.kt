@@ -43,6 +43,10 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
                 else -> {}
             }
         }
+
+        /**
+        검색어 입력이 없는 경우 전체 목록 출력
+        매번 타이핑할 때마다 키워드를 포함하는 가상자산 검색 */
         viewModel.searchWord.observe(viewLifecycleOwner) { word ->
             if (word.isNotEmpty()) {
                 setFilteredAssets(word, viewModel.sortingState.value!!)
@@ -60,6 +64,8 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
         }
     }
 
+    /**
+    정렬 및 검색어 키워드 필터링을 수행한 결과를 submitList 후, 최상단 스크롤링 수행 */
     private fun setFilteredAssets(word: String, sorting: AssetSortingStrategy) {
         val filteredAssets = viewModel.marketAssets.filter {
             it.currencyPair.contains(word)
@@ -70,7 +76,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
             binding.tvNoSearchResultWarning.visibility = View.GONE
         }
         adapter.submitList(sorting.sort(filteredAssets))
-        binding.rvMarketSearchResult.post{
+        binding.rvMarketSearchResult.post {
             binding.rvMarketSearchResult.scrollToPosition(0)
         }
     }
@@ -109,9 +115,10 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
         }
     }
 
+    /** 로컬에 가상자산이 저장되어있는지 여부를 별 모양 버튼에 반영하여 마켓 가상자산 조회 시에 알 수 있도록 하는 메소드 */
     private fun isArchivedAsset(asset: AssetDto) = viewModel.isArchivedAsset(asset)
 
-
+    /** 즐겨찾기 추가 또는 삭제 */
     private fun updateArchiveState(asset: AssetDto, isSelected: Boolean) {
         viewModel.updateArchivedState(asset, isSelected)
     }

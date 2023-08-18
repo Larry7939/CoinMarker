@@ -25,6 +25,7 @@ class MarketAdapter(
         holder.onBind(currentList[position])
     }
 
+
     inner class MarketViewHolder(private val binding: ItemAssetSearchResultBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: AssetDto) {
@@ -35,6 +36,8 @@ class MarketAdapter(
                     it.isSelected = !it.isSelected
                     updateArchiveState(data, it.isSelected)
                 }
+
+                /** 변동률, 변동가격 색상 업데이트 */
                 if (data.changePrice.first() == '-') {
                     tvChangeRate.setTextColor(context.resources.getColor(R.color.blue, null))
                     tvChangePrice.setTextColor(context.resources.getColor(R.color.blue, null))

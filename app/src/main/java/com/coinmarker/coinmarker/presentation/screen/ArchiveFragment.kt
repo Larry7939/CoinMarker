@@ -59,8 +59,10 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
         }
         viewModel.searchWord.observe(viewLifecycleOwner) { word ->
             if (word.isNotEmpty()) {
-                setFilteredAssets(word,
-                    viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+                setFilteredAssets(
+                    word,
+                    viewModel.sortingState.value
+                        ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
                 )
             } else {
                 binding.tvNoSearchResultWarning.visibility = View.GONE
@@ -97,7 +99,8 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
     }
 
     private fun handleSuccessArchive() {
-        setFilteredAssets(viewModel.searchWord.value ?: "",
+        setFilteredAssets(
+            viewModel.searchWord.value ?: "",
             viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
         )
         with(binding) {
@@ -107,8 +110,10 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
         }
     }
 
+    /** 즐겨찾기에 저장된 가상자산이 없는 경우에 대한 예외처리 */
     private fun handleEmptyArchive() {
-        setFilteredAssets(viewModel.searchWord.value ?: "",
+        setFilteredAssets(
+            viewModel.searchWord.value ?: "",
             viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
         )
         with(binding) {
@@ -123,8 +128,10 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
         binding.rvArchivedAsset.adapter = adapter
     }
 
+    /** 로컬에 가상자산이 저장되어있는지 여부를 별 모양 버튼에 반영하여 마켓 가상자산 조회 시에 알 수 있도록 하는 메소드 */
     private fun isArchivedAsset(asset: AssetDto) = viewModel.isArchivedAsset(asset)
 
+    /** 즐겨찾기 추가 또는 삭제 */
     private fun updateArchiveState(asset: AssetDto, isSelected: Boolean) {
         viewModel.updateArchivedState(asset, isSelected)
     }

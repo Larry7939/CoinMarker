@@ -38,6 +38,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         initSortingState(binding.tvSortingByVolume)
     }
 
+    /** 최초 정렬 상태 - 거래대금 내림차순*/
     private fun initSortingState(tv: AppCompatTextView) {
         viewModel.setSortingStrategy(VolumeAssetSortingStrategy(), SortingType.DESCENDING)
         setOrderingIcon(tv, SortingType.DESCENDING)
@@ -85,6 +86,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         }
     }
 
+    /** 직전에 설정한 정렬 상태의 대체 및 새로운 정렬 상태를 UI에 반영함 */
     private fun setSortingState(tv: AppCompatTextView, assetSortingStrategy: AssetSortingStrategy) {
         if (beforeSelectedTv != null) {
             setOrderingIcon(beforeSelectedTv!!, SortingType.DEFAULT)
@@ -125,7 +127,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
     }
 
     private fun setOrderingIcon(tv: AppCompatTextView, sortingType: SortingType) {
-        BindingAdapter.orderingIcon(
+        BindingAdapter.setOrderingIcon(
             tv,
             sortingType = sortingType
         )
