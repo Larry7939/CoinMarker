@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             tools:text = "변동가격"
             android:gravity="end"
-            android:text="@{assetData.last}"
+            android:text="@{assetData.changePrice}"
             android:textAppearance="@style/TextAppearance.D3"
             android:textColor="@color/B1"
             app:layout_constraintTop_toBottomOf="@id/tv_change_rate"
