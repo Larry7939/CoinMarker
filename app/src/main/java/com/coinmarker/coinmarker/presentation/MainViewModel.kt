@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
 ) :
     ViewModel() {
     private var _getMarketAssetsState = MutableLiveData<UiState>()
-    val getAssetInfoState: LiveData<UiState>
+    val getMarketAssetsState: LiveData<UiState>
         get() = _getMarketAssetsState
 
     private var _getArchivedAssetState = MutableLiveData<UiState>()
@@ -64,6 +64,9 @@ class MainViewModel @Inject constructor(
                 }
             }.onSuccess {
                 _marketAssets = it
+                if (_marketAssets.isEmpty()){
+                    _getMarketAssetsState.value = UiState.EMPTY
+                }
                 _getMarketAssetsState.value = UiState.SUCCESS
             }.onFailure { throwable ->
                 throwable.message?.let { KorbitLog.e(it) }

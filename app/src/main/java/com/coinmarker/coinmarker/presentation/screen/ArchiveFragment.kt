@@ -56,12 +56,11 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
         }
         viewModel.searchWord.observe(viewLifecycleOwner) { word ->
             if (word.isNotEmpty()) {
-                setFilteredAssets(
-                    word
-                )
+                setFilteredAssets(word)
             } else {
                 binding.tvNoSearchResultWarning.visibility = View.GONE
-                adapter.submitList(viewModel.archivedAssets)
+                binding.rvArchivedAsset.visibility = View.VISIBLE
+                setFilteredAssets(word)
             }
         }
         viewModel.sortingStrategy.observe(viewLifecycleOwner) {
@@ -84,9 +83,11 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
         if (filteredAssets.isEmpty()) {
             binding.tvEmptyWarning.visibility = View.GONE
             binding.tvNoSearchResultWarning.visibility = View.VISIBLE
+            binding.rvArchivedAsset.visibility = View.GONE
         } else {
             binding.tvEmptyWarning.visibility = View.GONE
             binding.tvNoSearchResultWarning.visibility = View.GONE
+            binding.rvArchivedAsset.visibility = View.VISIBLE
             viewModel.sortFilteredAssets(filteredAssets)
         }
     }

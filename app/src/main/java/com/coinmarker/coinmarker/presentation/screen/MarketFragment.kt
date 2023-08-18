@@ -32,7 +32,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
     }
 
     private fun addObserver() {
-        viewModel.getAssetInfoState.observe(viewLifecycleOwner) { state ->
+        viewModel.getMarketAssetsState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 UiState.LOADING -> handleLoadingAssets()
                 UiState.SUCCESS -> handleSuccessAssets()
@@ -49,22 +49,27 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
                 setFilteredAssets(word)
             } else {
                 binding.tvNoSearchResultWarning.visibility = View.GONE
-                adapter.submitList(viewModel.marketAssets)
+                setFilteredAssets(word)
             }
         }
 
         viewModel.sortingStrategy.observe(viewLifecycleOwner) {
             setFilteredAssets(
                 viewModel.searchWord.value ?: ""
-
             )
         }
 
-        viewModel.sortingState.observe(viewLifecycleOwner) {
-            adapter.submitList(viewModel.sortedAssets)
-            binding.rvMarketSearchResult.post {
-                binding.rvMarketSearchResult.scrollToPosition(0)
+        viewModel.sortingState.observe(viewLifecycleOwner) { state ->
+            when(state){
+                UiState.SUCCESS->{
+                    adapter.submitList(viewModel.sortedAssets)
+                    binding.rvMarketSearchResult.post {
+                        binding.rvMarketSearchResult.scrollToPosition(0)
+                    }
+                }
+                else ->{}
             }
+
         }
     }
 
@@ -76,8 +81,10 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
         }
         if (filteredAssets.isEmpty()) {
             binding.tvNoSearchResultWarning.visibility = View.VISIBLE
+            binding.rvMarketSearchResult.visibility = View.GONE
         } else {
             binding.tvNoSearchResultWarning.visibility = View.GONE
+            binding.rvMarketSearchResult.visibility = View.VISIBLE
             viewModel.sortFilteredAssets(filteredAssets)
         }
     }
