@@ -79,6 +79,7 @@ dependencies {
     //define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
+    implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
     implementation 'com.google.code.gson:gson:2.10.1'
 
@@ -86,15 +87,8 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
-    // Room Database
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation("androidx.room:room-ktx:$room_version")
-    kapt "androidx.room:room-compiler:$room_version"
-
-
     //Splashscreen
     implementation 'androidx.core:core-splashscreen:1.0.0-rc01'
 
-    implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
 
 }
