@@ -39,8 +39,6 @@ fun String.setPriceFormat(): String {
         } else {
             val essencePart = BigDecimal(number.toString()).toPlainString().substringBefore('.')
             val decimalPart = BigDecimal(number.toString()).toPlainString().substringAfter('.')
-            Timber.d("===== essence $essencePart")
-            Timber.d("===== decimal $decimalPart")
             "$essencePart.${decimalPart.getOrElse(0){'0'}}${decimalPart.getOrElse(1){'0'}}"
 
         }
