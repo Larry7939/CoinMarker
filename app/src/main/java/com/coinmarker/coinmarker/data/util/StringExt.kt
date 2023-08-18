@@ -3,7 +3,7 @@ package com.coinmarker.coinmarker.data.util
 import java.text.DecimalFormat
 
 fun String.addCommasToNumber(): String {
-    val number = this.toIntOrNull()
+    val number = this.toDoubleOrNull()
     if (number != null) {
         val numberFormat = DecimalFormat("#,###")
         return numberFormat.format(number)
@@ -30,14 +30,11 @@ fun String.setPriceFormat(): String {
     return this
 }
 
-fun String.toVolumeInteger(): String {
-    val doubleValue = this.toDoubleOrNull()
-    if (doubleValue != null) {
-        return if (doubleValue.isNaN()) {
-            this
-        } else {
-            doubleValue.toInt().toString()
-        }
+fun String.setVolumeFormat(): String {
+    val decimalSeparatorIndex = this.indexOf('.')
+    return if (decimalSeparatorIndex != -1) {
+        this.substring(0, decimalSeparatorIndex)
+    } else {
+        this
     }
-    return this
 }

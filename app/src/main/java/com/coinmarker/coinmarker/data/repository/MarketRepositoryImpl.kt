@@ -6,10 +6,11 @@ import com.coinmarker.coinmarker.data.source.MarketDataSource
 import com.coinmarker.coinmarker.data.util.addCommasToNumber
 import com.coinmarker.coinmarker.data.util.setPercentFormat
 import com.coinmarker.coinmarker.data.util.setPriceFormat
-import com.coinmarker.coinmarker.data.util.toVolumeInteger
+import com.coinmarker.coinmarker.data.util.setVolumeFormat
 import com.coinmarker.coinmarker.domain.MarketRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.Locale
 import javax.inject.Inject
 
 class MarketRepositoryImpl @Inject constructor(private val marketDataSource: MarketDataSource) :
@@ -32,7 +33,7 @@ class MarketRepositoryImpl @Inject constructor(private val marketDataSource: Mar
                         last = value.last.addCommasToNumber().setPriceFormat(),
                         changePercent = value.changePercent.addCommasToNumber().setPercentFormat(),
                         changePrice = value.change.addCommasToNumber().setPriceFormat(),
-                        volume = value.volume.toVolumeInteger().addCommasToNumber(),
+                        volume = value.volume.setVolumeFormat().addCommasToNumber(),
                         timeStamp = value.timestamp
                     )
                 )
