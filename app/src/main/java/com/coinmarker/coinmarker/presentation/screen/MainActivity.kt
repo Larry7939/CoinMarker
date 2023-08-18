@@ -93,8 +93,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         }
         beforeSelectedTv = tv
 
-        if (viewModel.sortingState.value!!.javaClass == assetSortingStrategy.javaClass) {
-            when (viewModel.sortingState.value!!.sortingType) {
+        if (viewModel.sortingStrategy.value!!.javaClass == assetSortingStrategy.javaClass) {
+            when (viewModel.sortingStrategy.value!!.sortingType) {
                 SortingType.ASCENDING -> {
                     setOrderingIcon(
                         tv,

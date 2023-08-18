@@ -40,12 +40,20 @@ class MainViewModel @Inject constructor(
     val archivedAssets: List<AssetDto>
         get() = _archivedAssets
 
+    private var _sortedAssets = mutableListOf<AssetDto>()
+    val sortedAssets: List<AssetDto>
+        get() = _sortedAssets
+
+    private var _sortingState = MutableLiveData<UiState>()
+    val sortingState: LiveData<UiState>
+        get() = _sortingState
+
     val searchWord = MutableLiveData<String>()
 
-    private var _sortingState =
+    private var _sortingStrategy =
         MutableLiveData<AssetSortingStrategy>(VolumeAssetSortingStrategy(SortingType.DESCENDING))
-    val sortingState: LiveData<AssetSortingStrategy>
-        get() = _sortingState
+    val sortingStrategy: LiveData<AssetSortingStrategy>
+        get() = _sortingStrategy
 
     fun getMarketAssets() {
         _getMarketAssetsState.value = UiState.LOADING
@@ -110,12 +118,29 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun sortFilteredAssets(filteredAssets:List<AssetDto>){
+        _sortingState.value = UiState.LOADING
+        viewModelScope.launch(Dispatchers.Main) {
+            runCatching {
+                withContext(Dispatchers.Default){
+                    sortingStrategy.value?.sort(filteredAssets)
+                }
+            }.onSuccess { sortedAssets->
+                _sortedAssets = sortedAssets as MutableList<AssetDto>
+                _sortingState.value = UiState.SUCCESS
+            }.onFailure { throwable ->
+                throwable.message?.let { KorbitLog.e(it) }
+                _sortingState.value = UiState.ERROR
+            }
+        }
+    }
+
     /** 로컬에 가상자산이 저장되어있는지 여부를 별 모양 버튼에 반영하여 마켓 가상자산 조회 시에 알 수 있도록 하는 메소드 */
     fun isArchivedAsset(asset: AssetDto) = localStorage.isArchivedAsset(asset)
 
     fun setSortingStrategy(sortingStrategy: AssetSortingStrategy, sortingType: SortingType) {
         sortingStrategy.sortingType = sortingType
         val strategy = sortingStrategy.strategyWithSortingType()
-        _sortingState.value = strategy
+        _sortingStrategy.value = strategy
     }
 }

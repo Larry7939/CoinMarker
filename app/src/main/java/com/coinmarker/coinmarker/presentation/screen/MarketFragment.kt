@@ -10,9 +10,6 @@ import com.coinmarker.coinmarker.databinding.FragmentMarketBinding
 import com.coinmarker.coinmarker.presentation.MainViewModel
 import com.coinmarker.coinmarker.presentation.adapter.MarketAdapter
 import com.coinmarker.coinmarker.presentation.util.UiState
-import com.coinmarker.coinmarker.presentation.util.strategy.AssetSortingStrategy
-import com.coinmarker.coinmarker.presentation.util.strategy.VolumeAssetSortingStrategy
-import com.coinmarker.coinmarker.presentation.util.type.SortingType
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,24 +46,31 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
         매번 타이핑할 때마다 키워드를 포함하는 가상자산 검색 */
         viewModel.searchWord.observe(viewLifecycleOwner) { word ->
             if (word.isNotEmpty()) {
-                setFilteredAssets(word, viewModel.sortingState.value!!)
+                setFilteredAssets(word)
             } else {
                 binding.tvNoSearchResultWarning.visibility = View.GONE
                 adapter.submitList(viewModel.marketAssets)
             }
         }
 
-        viewModel.sortingState.observe(viewLifecycleOwner) {
+        viewModel.sortingStrategy.observe(viewLifecycleOwner) {
             setFilteredAssets(
-                viewModel.searchWord.value ?: "",
-                viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+                viewModel.searchWord.value ?: ""
+
             )
+        }
+
+        viewModel.sortingState.observe(viewLifecycleOwner) {
+            adapter.submitList(viewModel.sortedAssets)
+            binding.rvMarketSearchResult.post {
+                binding.rvMarketSearchResult.scrollToPosition(0)
+            }
         }
     }
 
     /**
     정렬 및 검색어 키워드 필터링을 수행한 결과를 submitList 후, 최상단 스크롤링 수행 */
-    private fun setFilteredAssets(word: String, sorting: AssetSortingStrategy) {
+    private fun setFilteredAssets(word: String) {
         val filteredAssets = viewModel.marketAssets.filter {
             it.currencyPair.contains(word)
         }
@@ -74,10 +78,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
             binding.tvNoSearchResultWarning.visibility = View.VISIBLE
         } else {
             binding.tvNoSearchResultWarning.visibility = View.GONE
-        }
-        adapter.submitList(sorting.sort(filteredAssets))
-        binding.rvMarketSearchResult.post {
-            binding.rvMarketSearchResult.scrollToPosition(0)
+            viewModel.sortFilteredAssets(filteredAssets)
         }
     }
 
@@ -89,8 +90,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
 
     private fun handleSuccessAssets() {
         setFilteredAssets(
-            viewModel.searchWord.value ?: "",
-            viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+            viewModel.searchWord.value ?: ""
         )
         with(binding) {
             pbSearchLoading.visibility = View.GONE
@@ -100,8 +100,7 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
 
     private fun handleEmptyAssets() {
         setFilteredAssets(
-            viewModel.searchWord.value ?: "",
-            viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+            viewModel.searchWord.value ?: ""
         )
         with(binding) {
             pbSearchLoading.visibility = View.GONE
