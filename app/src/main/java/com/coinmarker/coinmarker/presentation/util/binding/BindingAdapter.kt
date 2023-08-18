@@ -4,12 +4,11 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import com.coinmarker.coinmarker.R
 import com.coinmarker.coinmarker.presentation.util.type.SortingType
-import timber.log.Timber
 
 object BindingAdapter {
     @BindingAdapter("orderingIcon")
     @JvmStatic
-    fun orderingIcon(textView: AppCompatTextView, sortingType: SortingType) {
+    fun setOrderingIcon(textView: AppCompatTextView, sortingType: SortingType) {
         when (sortingType) {
             SortingType.ASCENDING -> {
                 textView.setCompoundDrawablesWithIntrinsicBounds(
