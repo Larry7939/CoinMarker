@@ -49,7 +49,7 @@
             android:text="@{assetData.last}"
             tools:text = "현재가"
             android:gravity="end"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="10dp"
             android:textAppearance="@style/TextAppearance.D3"
             android:textColor="@color/B1"
              app:layout_constraintEnd_toStartOf="@id/tv_change_rate"
@@ -64,7 +64,7 @@
             android:text='@{assetData.changePercent + "%"}'
             android:textAppearance="@style/TextAppearance.D3"
             android:textColor="@color/B1"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="5dp"
             app:layout_constraintEnd_toStartOf="@id/tv_volume"
             app:layout_constraintTop_toTopOf="@id/tv_volume"
             app:layout_constraintBottom_toBottomOf="@id/tv_volume"
