@@ -1,7 +1,5 @@
 package com.coinmarker.coinmarker.presentation
 
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +9,6 @@ import com.coinmarker.coinmarker.data.source.LocalDataSource
 import com.coinmarker.coinmarker.data.util.KorbitLog
 import com.coinmarker.coinmarker.domain.MarketRepository
 import com.coinmarker.coinmarker.presentation.util.UiState
-import com.coinmarker.coinmarker.presentation.util.strategy.AssetSorter
 import com.coinmarker.coinmarker.presentation.util.strategy.AssetSortingStrategy
 import com.coinmarker.coinmarker.presentation.util.strategy.VolumeAssetSortingStrategy
 import com.coinmarker.coinmarker.presentation.util.type.SortingType
@@ -19,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.w3c.dom.Text
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,11 +42,11 @@ class MainViewModel @Inject constructor(
 
     val searchWord = MutableLiveData<String>()
 
-    private var _sortingState = MutableLiveData<AssetSortingStrategy>(VolumeAssetSortingStrategy(SortingType.DESCENDING))
-    val sortingState:LiveData<AssetSortingStrategy>
+    private var _sortingState =
+        MutableLiveData<AssetSortingStrategy>(VolumeAssetSortingStrategy(SortingType.DESCENDING))
+    val sortingState: LiveData<AssetSortingStrategy>
         get() = _sortingState
 
-    private val sorter = AssetSorter(_sortingState.value?:VolumeAssetSortingStrategy(SortingType.DESCENDING))
     fun getMarketAssets() {
         _getMarketAssetsState.value = UiState.LOADING
         viewModelScope.launch(Dispatchers.Main) {
@@ -88,6 +84,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    /** 즐겨찾기 추가 또는 삭제 */
     fun updateArchivedState(asset: AssetDto, isSelected: Boolean) {
         _getArchivedAssetState.value = UiState.LOADING
         viewModelScope.launch(Dispatchers.Main) {
@@ -113,12 +110,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    /** 로컬에 가상자산이 저장되어있는지 여부를 별 모양 버튼에 반영하여 마켓 가상자산 조회 시에 알 수 있도록 하는 메소드 */
     fun isArchivedAsset(asset: AssetDto) = localStorage.isArchivedAsset(asset)
 
-    fun setSortingStrategy(sortingStrategy: AssetSortingStrategy,sortingType:SortingType){
+    fun setSortingStrategy(sortingStrategy: AssetSortingStrategy, sortingType: SortingType) {
         sortingStrategy.sortingType = sortingType
-        val strategy =  sortingStrategy.strategyWithSortingType()
+        val strategy = sortingStrategy.strategyWithSortingType()
         _sortingState.value = strategy
-        sorter.setSortingStrategy(_sortingState.value?:VolumeAssetSortingStrategy(SortingType.DESCENDING))
     }
 }
