@@ -24,6 +24,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/border_item_archive_btn"
+            android:padding="10dp"
             android:layout_marginStart="10dp"
             android:backgroundTint="@color/W1"/>
         <androidx.appcompat.widget.AppCompatTextView
@@ -80,12 +82,12 @@
             app:layout_constraintEnd_toEndOf="@id/tv_change_rate" />
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_volume"
-            android:layout_width="80dp"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             tools:text = "거래대금"
             android:gravity="end"
             android:text="@{assetData.volume}"
-            android:layout_marginStart="120dp"
+            android:layout_marginStart="110dp"
             android:textAppearance="@style/TextAppearance.D3"
             android:textColor="@color/B1"
             android:layout_marginEnd="15dp"
