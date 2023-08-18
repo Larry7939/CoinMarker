@@ -11,4 +11,7 @@
     <color name="G5">#FFD9D9D9</color>
     <color name="G6">#FFE7E7E7</color>
     <color name="W1">#FFFFFFFF</color>
+    <color name="blue">#FF4E4AFF</color>
+    <color name="red">#FFFF4A4A</color>
+
 </resources>
