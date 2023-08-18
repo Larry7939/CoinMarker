@@ -33,7 +33,7 @@
             tools:text = "가상자산명"
             android:text="@{assetData.currencyPair}"
             android:gravity="end"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="10dp"
             android:textAppearance="@style/TextAppearance.D3"
             android:textColor="@color/B1"
             app:layout_constraintStart_toEndOf="@id/ib_asset_is_archived"

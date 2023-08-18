@@ -10,6 +10,9 @@ import com.coinmarker.coinmarker.databinding.FragmentArchiveBinding
 import com.coinmarker.coinmarker.presentation.MainViewModel
 import com.coinmarker.coinmarker.presentation.adapter.ArchiveAdapter
 import com.coinmarker.coinmarker.presentation.util.UiState
+import com.coinmarker.coinmarker.presentation.util.strategy.AssetSortingStrategy
+import com.coinmarker.coinmarker.presentation.util.strategy.VolumeAssetSortingStrategy
+import com.coinmarker.coinmarker.presentation.util.type.SortingType
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,15 +59,23 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
         }
         viewModel.searchWord.observe(viewLifecycleOwner) { word ->
             if (word.isNotEmpty()) {
-                setFilteredAssets(word)
+                setFilteredAssets(word,
+                    viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+                )
             } else {
                 binding.tvNoSearchResultWarning.visibility = View.GONE
                 adapter.submitList(viewModel.archivedAssets)
             }
         }
+        viewModel.sortingState.observe(viewLifecycleOwner) {
+            setFilteredAssets(
+                viewModel.searchWord.value ?: "",
+                viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+            )
+        }
     }
 
-    private fun setFilteredAssets(word: String) {
+    private fun setFilteredAssets(word: String, sorting: AssetSortingStrategy) {
         val filteredAssets = viewModel.archivedAssets.filter {
             it.currencyPair.contains(word)
         }
@@ -75,7 +86,7 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
             binding.tvEmptyWarning.visibility = View.GONE
             binding.tvNoSearchResultWarning.visibility = View.GONE
         }
-        adapter.submitList(filteredAssets)
+        adapter.submitList(sorting.sort(filteredAssets))
     }
 
     private fun handleLoadingArchive() {
@@ -86,7 +97,9 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
     }
 
     private fun handleSuccessArchive() {
-        setFilteredAssets(viewModel.searchWord.value ?: "")
+        setFilteredAssets(viewModel.searchWord.value ?: "",
+            viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+        )
         with(binding) {
             tvEmptyWarning.visibility = View.GONE
             pbArchiveLoading.visibility = View.GONE
@@ -95,7 +108,9 @@ class ArchiveFragment : BindingFragment<FragmentArchiveBinding>(R.layout.fragmen
     }
 
     private fun handleEmptyArchive() {
-        setFilteredAssets(viewModel.searchWord.value ?: "")
+        setFilteredAssets(viewModel.searchWord.value ?: "",
+            viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+        )
         with(binding) {
             tvEmptyWarning.visibility = View.VISIBLE
             tvNoSearchResultWarning.visibility = View.GONE

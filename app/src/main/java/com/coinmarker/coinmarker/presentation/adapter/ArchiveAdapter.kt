@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.coinmarker.coinmarker.R
 import com.coinmarker.coinmarker.data.model.AssetDto
 import com.coinmarker.coinmarker.databinding.ItemAssetArchiveBinding
 import com.coinmarker.coinmarker.presentation.util.diffutil.AssetItemCallback
@@ -27,12 +28,25 @@ class ArchiveAdapter(
     inner class ArchiveViewHolder(private val binding: ItemAssetArchiveBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(data: AssetDto) {
-            binding.assetData = data
-            binding.ibAssetIsArchived.isSelected = isArchivedAsset(data)
-            binding.ibAssetIsArchived.setOnClickListener {
-                it.isSelected = !it.isSelected
-                updateArchiveState(data, it.isSelected)
+            with(binding) {
+                assetData = data
+                ibAssetIsArchived.isSelected = isArchivedAsset(data)
+                ibAssetIsArchived.setOnClickListener {
+                    it.isSelected = !it.isSelected
+                    updateArchiveState(data, it.isSelected)
+                }
+                if (data.changePrice.first() == '-') {
+                    tvChangeRate.setTextColor(context.resources.getColor(R.color.blue, null))
+                    tvChangePrice.setTextColor(context.resources.getColor(R.color.blue, null))
+                } else if (data.changePrice.first() == '0') {
+                    tvChangeRate.setTextColor(context.resources.getColor(R.color.B1, null))
+                    tvChangePrice.setTextColor(context.resources.getColor(R.color.B1, null))
+                } else {
+                    tvChangeRate.setTextColor(context.resources.getColor(R.color.red, null))
+                    tvChangePrice.setTextColor(context.resources.getColor(R.color.red, null))
+                }
             }
+
         }
     }
 }

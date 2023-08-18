@@ -2,4 +2,5 @@
 <resources>
     <dimen name="guide_start">15dp</dimen>
     <dimen name="guide_end">15dp</dimen>
+    <dimen name="sorting_drawable_padding">5dp</dimen>
 </resources>

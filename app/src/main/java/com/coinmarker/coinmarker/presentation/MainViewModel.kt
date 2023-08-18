@@ -1,5 +1,7 @@
 package com.coinmarker.coinmarker.presentation
 
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,10 +11,15 @@ import com.coinmarker.coinmarker.data.source.LocalDataSource
 import com.coinmarker.coinmarker.data.util.KorbitLog
 import com.coinmarker.coinmarker.domain.MarketRepository
 import com.coinmarker.coinmarker.presentation.util.UiState
+import com.coinmarker.coinmarker.presentation.util.strategy.AssetSorter
+import com.coinmarker.coinmarker.presentation.util.strategy.AssetSortingStrategy
+import com.coinmarker.coinmarker.presentation.util.strategy.VolumeAssetSortingStrategy
+import com.coinmarker.coinmarker.presentation.util.type.SortingType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.w3c.dom.Text
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,6 +46,11 @@ class MainViewModel @Inject constructor(
 
     val searchWord = MutableLiveData<String>()
 
+    private var _sortingState = MutableLiveData<AssetSortingStrategy>(VolumeAssetSortingStrategy(SortingType.DESCENDING))
+    val sortingState:LiveData<AssetSortingStrategy>
+        get() = _sortingState
+
+    private val sorter = AssetSorter(_sortingState.value?:VolumeAssetSortingStrategy(SortingType.DESCENDING))
     fun getMarketAssets() {
         _getMarketAssetsState.value = UiState.LOADING
         viewModelScope.launch(Dispatchers.Main) {
@@ -102,4 +114,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun isArchivedAsset(asset: AssetDto) = localStorage.isArchivedAsset(asset)
+
+    fun setSortingStrategy(sortingStrategy: AssetSortingStrategy,sortingType:SortingType){
+        sortingStrategy.sortingType = sortingType
+        val strategy =  sortingStrategy.strategyWithSortingType()
+        _sortingState.value = strategy
+        sorter.setSortingStrategy(_sortingState.value?:VolumeAssetSortingStrategy(SortingType.DESCENDING))
+    }
 }

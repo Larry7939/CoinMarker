@@ -10,6 +10,9 @@ import com.coinmarker.coinmarker.databinding.FragmentMarketBinding
 import com.coinmarker.coinmarker.presentation.MainViewModel
 import com.coinmarker.coinmarker.presentation.adapter.MarketAdapter
 import com.coinmarker.coinmarker.presentation.util.UiState
+import com.coinmarker.coinmarker.presentation.util.strategy.AssetSortingStrategy
+import com.coinmarker.coinmarker.presentation.util.strategy.VolumeAssetSortingStrategy
+import com.coinmarker.coinmarker.presentation.util.type.SortingType
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,15 +45,22 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
         }
         viewModel.searchWord.observe(viewLifecycleOwner) { word ->
             if (word.isNotEmpty()) {
-                setFilteredAssets(word)
+                setFilteredAssets(word, viewModel.sortingState.value!!)
             } else {
                 binding.tvNoSearchResultWarning.visibility = View.GONE
                 adapter.submitList(viewModel.marketAssets)
             }
         }
+
+        viewModel.sortingState.observe(viewLifecycleOwner) {
+            setFilteredAssets(
+                viewModel.searchWord.value ?: "",
+                viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+            )
+        }
     }
 
-    private fun setFilteredAssets(word: String) {
+    private fun setFilteredAssets(word: String, sorting: AssetSortingStrategy) {
         val filteredAssets = viewModel.marketAssets.filter {
             it.currencyPair.contains(word)
         }
@@ -59,7 +69,10 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
         } else {
             binding.tvNoSearchResultWarning.visibility = View.GONE
         }
-        adapter.submitList(filteredAssets)
+        adapter.submitList(sorting.sort(filteredAssets))
+        binding.rvMarketSearchResult.post{
+            binding.rvMarketSearchResult.scrollToPosition(0)
+        }
     }
 
     private fun handleLoadingAssets() {
@@ -69,7 +82,10 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
     }
 
     private fun handleSuccessAssets() {
-        setFilteredAssets(viewModel.searchWord.value?:"")
+        setFilteredAssets(
+            viewModel.searchWord.value ?: "",
+            viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+        )
         with(binding) {
             pbSearchLoading.visibility = View.GONE
             rvMarketSearchResult.visibility = View.VISIBLE
@@ -77,7 +93,10 @@ class MarketFragment : BindingFragment<FragmentMarketBinding>(R.layout.fragment_
     }
 
     private fun handleEmptyAssets() {
-        setFilteredAssets(viewModel.searchWord.value?:"")
+        setFilteredAssets(
+            viewModel.searchWord.value ?: "",
+            viewModel.sortingState.value ?: VolumeAssetSortingStrategy(SortingType.DESCENDING)
+        )
         with(binding) {
             pbSearchLoading.visibility = View.GONE
             rvMarketSearchResult.visibility = View.GONE

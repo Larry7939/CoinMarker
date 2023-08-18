@@ -6,10 +6,13 @@
         <variable
             name="vm"
             type="com.coinmarker.coinmarker.presentation.MainViewModel" />
+        <import type="com.coinmarker.coinmarker.presentation.util.type.SortingType"/>
+        <import type="com.coinmarker.coinmarker.presentation.util.strategy.AssetSortingStrategy"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/W1">
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/gl_start"
             android:layout_width="wrap_content"
@@ -69,14 +72,75 @@
 
         </com.google.android.material.tabs.TabLayout>
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_container_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/const_sorting_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/gl_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_end"
+            app:layout_constraintTop_toBottomOf="@id/tab_layout"
+            android:background="@drawable/border_asset_sorting_bar"
+            android:paddingVertical="15dp"
+            android:layout_marginTop="15dp">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_sorting_by_asset_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tab_layout"
-                />
+                android:drawablePadding="@dimen/sorting_drawable_padding"
+                android:text="@string/sorting_by_asset_name"
+                android:textAppearance="@style/TextAppearance.D2"
+                android:drawableEnd="@drawable/ic_default_order"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_sorting_by_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@id/tv_sorting_by_24_hours"
+                android:layout_marginEnd="15dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textAppearance="@style/TextAppearance.D2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@string/sorting_by_last"
+                android:drawablePadding="@dimen/sorting_drawable_padding"
+                android:drawableEnd="@drawable/ic_default_order"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_sorting_by_24_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textAppearance="@style/TextAppearance.D2"
+                app:layout_constraintEnd_toStartOf="@id/tv_sorting_by_volume"
+                android:layout_marginEnd="15dp"
+                android:text="@string/sorting_by_24_hours"
+                android:drawablePadding="@dimen/sorting_drawable_padding"
+                android:drawableEnd="@drawable/ic_default_order"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_sorting_by_volume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@string/sorting_by_volume"
+                android:textAppearance="@style/TextAppearance.D2"
+                android:layout_marginEnd="15dp"
+                android:drawablePadding="@dimen/sorting_drawable_padding"
+                android:drawableEnd="@drawable/ic_default_order" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/const_sorting_bar"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
