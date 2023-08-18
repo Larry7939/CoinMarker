@@ -34,7 +34,7 @@
             android:text="@{assetData.currencyPair}"
             android:gravity="end"
             android:layout_marginEnd="5dp"
-            android:textAppearance="@style/TextAppearance.D2"
+            android:textAppearance="@style/TextAppearance.D3"
             android:textColor="@color/B1"
             app:layout_constraintStart_toEndOf="@id/ib_asset_is_archived"
             app:layout_constraintEnd_toStartOf="@id/tv_last"
